@@ -1,0 +1,82 @@
+-- testes_básicos linguagem LFSimp
+-- o interpretador deve avaliar uma expressão por vez
+-- V. pode fazer os testes abaixo em linha de comando: a forma mais fácil de executar
+--
+-- 1. em um terminal executar o ghci
+-- 2. ghci> :load Main.hs
+-- 3. ghci> main
+
+-- O main (em Main.hs) executa cada expressão dada na linha de comando (>>>).
+-- Executando cada uma das expressões abaixo, V. poderá observar os resultados, 
+-- inclusive eventuais problemas de execução.
+-- Além desses testes, faça os seus próprios testes, com expressões mais elaboradas.
+-- Tudo isso ajudará a entender qd há problemas na escrita (parser) ou na execução (eval).
+
+-- operações aritméticas - forma prefixa
+(+ 1 2.3)    
+(- 10 20)
+(* (+ 1 2.3) (- 10 20))
+(* (+ 1 2.3) (- 10 (~ 20)))
+(+ (head (tail (cons 2 (cons 1 3)))) (call (lambda f (call f (~ 32))) (lambda x (- 200 x))))
+(+ (head (tail (cons 2 (cons 1 3)))) (lambda f (call f (~ 32))))  -- veja o que acontece! execução...
+(+ (head (tail (cons 2 (cons 1 3)))) (cons 2 3))                  -- veja o que acontece! execução...
+
+-- operações lista
+(cons 2 3)                          -- construtor de lista
+(cons 2 (cons 1 3)))                -- construtor de lista
+(cons 2 (tail (cons 10 (cons 1 3)))) 
+(cons (+ 3 4) (call (lambda x (+ x 5)) 8))
+(cons (+ 3 4) (lambda x (+ x 5)))
+(cons (lambda x (+ x 5)) (+ 3 4))
+(head (cons 2 3))                   -- primeiro elemento da lista
+(tail (cons 2 (cons 1 3)))          -- lista sem o primeiro elemento
+(head (tail (cons 2 (cons 1 3))))
+(tail (tail (cons 2 (cons 1 3))))
+(head (tail (cons 2 3)))                  -- veja o que acontece - execução...
+(tail (tail (cons 2 3)))                  -- veja o que acontece - execução...
+(tail (cons (+ 3 4) (lambda x (+ x 5))))  -- veja o que acontece - execução...
+
+-- if - na condição, 0 denota o falso, qq outro valor denota verdadeiro
+(if False (+ 1 2) (+ 10 20))
+(if 0.0 (+ 1 2) (+ 10 20))
+(if false (+ 1 2) (+ 10 20))
+(if 0 (+ 1 2) (% 50 10))
+(if (+ 55 10) (+ 1 2) (+ 10 20))
+(if (- 15 10) (+ 1 2) (+ 10 20))
+(if (- 5 5) (+ 1 2) (+ 10 20))
+(if (~ 1) (+ 1 2) (+ 10 20))
+(if (let 1addnum (+ 12 13) (+ 1addnum 5)) (+ 1 2) (+ 10 20))
+(if (let maisum (lambda x (+ x 1)) (call maisum 5)) (+ 1 2) (+ 10 20))
+(if (let menosum (lambda x (- x 1)) (call menosum 5)) (+ 1 2) (+ 10 20))
+(if (let menosum (lambda x (- x 1)) (call menosum 1)) (+ 1 2) (+ 10 20))
+(if (if 1 (+ 1 2) (+ 10 20)) (+ 100 200) (+ 10 20))
+
+-- lambda
+(call (lambda x (+ x 5)) 8)                             -- função aplicada a valores
+(call (lambda ma5ia (+ ma5ia 5)) 8)                     -- função aplicada a valores
+(call (lambda ?ma5ia (+ ?ma5ia 5)) 8)                   -- função aplicada a valores
+(call (lambda ? (+ ? 5)) 8)                             -- função aplicada a valores - veja o símbolo
+(call (lambda + (+ + 5)) 8)                             -- função aplicada a valores - veja o símbolo
+(call (lambda 2 (+ 2 5)) 8)                             -- função aplicada a valores - veja o símbolo e a execução...
+(call (lambda 2a (+ 2a 5)) 8)                           -- função aplicada a valores - veja o símbolo e a execução...
+(call (lambda f (call f (~ 32))) (lambda x (- 200 x)))  -- função aplicada a funções (alta ordem)
+
+-- let - utilizado para dar nomes a alguns elementos 
+(let um 1 (+ um 5))                             -- nome para um literal
+(let ? 1 (+ ? 5))                               -- símbolo para um literal
+(let ! 1 (+ ! 5))                               -- símbolo para um literal
+(let 13 1 (+ 13 5))                             -- símbolo para um literal - veja o símbolo e a execução...
+(let if 1 (+ if 5))                             -- palavras reservadas podem ser sobrecarregadas localmente
+(let + 1 (+ + 5))                               -- os símbolos podem ser sobrecarregados
+(let ~ 1 (+ ~ 5))                               -- os símbolos podem ser sobrecarregados
+(let 1addnum (+ 12 13) (+ 1addnum 5))             -- nome para uma expressão aritmética
+(let maisum (lambda x (+ x 1)) (call maisum 5)) -- nome para uma expressão lambda
+(letrec fatorial (lambda x (if x (* x (call fatorial (- x 1))) 1)) (call fatorial 5))
+
+-- quote
+(quote 10)
+(quote casa)
+
+
+
+
